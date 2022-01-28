@@ -1,5 +1,7 @@
 use std::{ops::{Index, IndexMut}, fmt::Display};
 
+use crate::{slice::MatrixSlice, slicemut::MatrixSliceMut};
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Matrix<T> {
     rows: usize,
@@ -150,6 +152,21 @@ impl<T> Matrix<T> {
     #[must_use]
     pub fn data(&self) -> &[T] {
         &self.data
+    }
+
+    #[must_use]
+    pub fn data_mut(&mut self) -> &mut [T] {
+        &mut self.data
+    }
+
+    #[must_use]
+    pub fn as_slice(&self) -> MatrixSlice<T> {
+        MatrixSlice::new(self)
+    }
+
+    #[must_use]
+    pub fn as_slice_mut(&mut self) -> MatrixSliceMut<T> {
+        MatrixSliceMut::new(self)
     }
 }
 
