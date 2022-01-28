@@ -8,8 +8,10 @@ pub struct Matrix<T> {
 }
 
 impl<T> Matrix<T> {
-    #[must_use] pub fn new(rows: usize, cols: usize) -> Self 
-        where T: Default + Clone 
+    #[must_use]
+    pub fn new(rows: usize, cols: usize) -> Self
+    where
+        T: Default + Clone,
     {
         Self {
             rows,
@@ -19,7 +21,8 @@ impl<T> Matrix<T> {
     }
 
     pub fn from_default(rows: usize, cols: usize, default: T) -> Self
-        where T: Clone 
+    where
+        T: Clone,
     {
         Self {
             rows,
@@ -29,30 +32,32 @@ impl<T> Matrix<T> {
     }
 
     /// # Safety
-    /// 
+    ///
     /// This function is unsafe (just like [`slice::get_unchecked`])
-    /// 
+    ///
     /// For a safe version of this function, see [`get`].
-    /// 
+    ///
     /// [`slice::get_unchecked`]: slice::get_unchecked
     /// [`get`]: #method.get
-    #[must_use] pub unsafe fn get_unchecked(&self, row: usize, col: usize) -> &T {
+    #[must_use]
+    pub unsafe fn get_unchecked(&self, row: usize, col: usize) -> &T {
         self.data.get_unchecked(row * self.cols + col)
     }
 
     /// # Safety
-    /// 
+    ///
     /// This function is unsafe (just like [`slice::get_unchecked_mut`])
-    /// 
+    ///
     /// For a safe version of this function, see [`get_mut`].
-    /// 
+    ///
     /// [`slice::get_unchecked_mut`]: slice::get_unchecked_mut
     /// [`get_mut`]: #method.get_mut
     pub unsafe fn get_unchecked_mut(&mut self, row: usize, col: usize) -> &mut T {
         self.data.get_unchecked_mut(row * self.cols + col)
     }
 
-    #[must_use] pub fn get(&self, row: usize, col: usize) -> Option<&T> {
+    #[must_use]
+    pub fn get(&self, row: usize, col: usize) -> Option<&T> {
         if row < self.rows && col < self.cols {
             Some(unsafe { self.get_unchecked(row, col) })
         } else {
@@ -68,11 +73,13 @@ impl<T> Matrix<T> {
         }
     }
 
-    #[must_use] pub const fn rows(&self) -> usize {
+    #[must_use]
+    pub const fn rows(&self) -> usize {
         self.rows
     }
 
-    #[must_use] pub const fn cols(&self) -> usize {
+    #[must_use]
+    pub const fn cols(&self) -> usize {
         self.cols
     }
 
@@ -100,8 +107,10 @@ impl<T> Matrix<T> {
         self.data.iter_mut().skip(col).step_by(self.cols)
     }
 
-    #[must_use] pub fn clone_buffer(&self) -> Vec<T> 
-        where T: Clone
+    #[must_use]
+    pub fn clone_buffer(&self) -> Vec<T>
+    where
+        T: Clone,
     {
         self.data.clone()
     }
