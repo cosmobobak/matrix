@@ -1,4 +1,4 @@
-use std::ops::{Index, IndexMut};
+use std::{ops::{Index, IndexMut}, fmt::Display};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Matrix<T> {
@@ -93,6 +93,30 @@ impl<T> Matrix<T> {
         self.cols
     }
 
+    pub fn iter_rows(&self) -> impl Iterator<Item = &[T]> {
+        self.data.chunks(self.cols)
+    }
+
+    pub fn iter_rows_mut(&mut self) -> impl Iterator<Item = &mut [T]> {
+        self.data.chunks_mut(self.cols)
+    }
+
+    /// # Panics
+    /// 
+    /// We haven't done this one yet. :)
+    #[allow(clippy::unused_self)]
+    pub fn iter_cols(&self) /* -> impl Iterator<Item = impl Iterator<Item = &T>> */ {
+        todo!();
+    }
+
+    /// # Panics
+    /// 
+    /// We haven't done this one yet. :)
+    #[allow(clippy::unused_self)]
+    pub fn iter_cols_mut(&mut self) /* -> impl Iterator<Item = impl Iterator<Item = &mut T>> */ {
+        todo!();
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.data.iter()
     }
@@ -142,6 +166,34 @@ impl<T> Index<(usize, usize)> for Matrix<T> {
 impl<T> IndexMut<(usize, usize)> for Matrix<T> {
     fn index_mut(&mut self, (row, col): (usize, usize)) -> &mut T {
         &mut self.data[row * self.cols + col]
+    }
+}
+
+impl<T> Display for Matrix<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for (i, row) in self.iter_rows().enumerate() {
+            if i == 0 {
+                write!(f, "[[")?;
+            } else {
+                write!(f, " [")?;
+            }
+            for (j, col) in row.iter().enumerate() {
+                if j == 0 {
+                    write!(f, "{}", col)?;
+                } else {
+                    write!(f, ", {}", col)?;
+                }
+            }
+            if i == self.rows - 1 {
+                write!(f, "]]")?;
+            } else {
+                writeln!(f, "],")?;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -233,5 +285,17 @@ mod tests {
         ];
         let vals = m.clone_buffer();
         assert_eq!(vals, &[1, 0, 0, 0, 2, 0, 0, 0, 3]);
+    }
+
+    #[test]
+    fn printing() {
+        let m = matrix![
+            1, 0, 0;
+            0, 2, 0;
+            0, 0, 3
+        ];
+        assert_eq!(format!("{}", m), r#"[[1, 0, 0],
+ [0, 2, 0],
+ [0, 0, 3]]"#);
     }
 }
