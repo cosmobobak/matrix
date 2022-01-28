@@ -8,20 +8,20 @@ pub struct Matrix<T> {
 }
 
 impl<T> Matrix<T> {
-    pub fn new(rows: usize, cols: usize) -> Matrix<T> 
+    #[must_use] pub fn new(rows: usize, cols: usize) -> Self 
         where T: Default + Clone 
     {
-        Matrix {
+        Self {
             rows,
             cols,
             data: vec![T::default(); rows * cols],
         }
     }
 
-    pub fn from_default(rows: usize, cols: usize, default: T) -> Matrix<T> 
+    pub fn from_default(rows: usize, cols: usize, default: T) -> Self
         where T: Clone 
     {
-        Matrix {
+        Self {
             rows,
             cols,
             data: vec![default; rows * cols],
@@ -36,7 +36,7 @@ impl<T> Matrix<T> {
     /// 
     /// [`slice::get_unchecked`]: slice::get_unchecked
     /// [`get`]: #method.get
-    pub unsafe fn get_unchecked(&self, row: usize, col: usize) -> &T {
+    #[must_use] pub unsafe fn get_unchecked(&self, row: usize, col: usize) -> &T {
         self.data.get_unchecked(row * self.cols + col)
     }
 
@@ -52,7 +52,7 @@ impl<T> Matrix<T> {
         self.data.get_unchecked_mut(row * self.cols + col)
     }
 
-    pub fn get(&self, row: usize, col: usize) -> Option<&T> {
+    #[must_use] pub fn get(&self, row: usize, col: usize) -> Option<&T> {
         if row < self.rows && col < self.cols {
             Some(unsafe { self.get_unchecked(row, col) })
         } else {
@@ -68,11 +68,11 @@ impl<T> Matrix<T> {
         }
     }
 
-    pub fn rows(&self) -> usize {
+    #[must_use] pub const fn rows(&self) -> usize {
         self.rows
     }
 
-    pub fn cols(&self) -> usize {
+    #[must_use] pub const fn cols(&self) -> usize {
         self.cols
     }
 
@@ -100,7 +100,7 @@ impl<T> Matrix<T> {
         self.data.iter_mut().skip(col).step_by(self.cols)
     }
 
-    pub fn clone_buffer(&self) -> Vec<T> 
+    #[must_use] pub fn clone_buffer(&self) -> Vec<T> 
         where T: Clone
     {
         self.data.clone()
