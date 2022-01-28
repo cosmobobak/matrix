@@ -170,8 +170,6 @@ macro_rules! matrix {
 
 #[cfg(test)]
 mod tests {
-    use super::Matrix;
-
     #[test]
     fn macro_simple() {
         let m = matrix![1, 2, 3; 4, 5, 6];
@@ -188,10 +186,11 @@ mod tests {
 
     #[test]
     fn global_iteration() {
-        let mut m = Matrix::<i32>::new(3, 3);
-        m[(0, 0)] = 1;
-        m[(1, 1)] = 2;
-        m[(2, 2)] = 3;
+        let m = matrix![
+            1, 0, 0;
+            0, 2, 0;
+            0, 0, 3
+        ];
         assert_eq!(m.iter().sum::<i32>(), 6);
         let vals = m.iter().copied().collect::<Vec<i32>>();
         assert_eq!(vals, &[1, 0, 0, 0, 2, 0, 0, 0, 3]);
@@ -199,10 +198,11 @@ mod tests {
 
     #[test]
     fn row_iteration() {
-        let mut m = Matrix::<i32>::new(3, 3);
-        m[(0, 0)] = 1;
-        m[(1, 1)] = 2;
-        m[(2, 2)] = 3;
+        let m = matrix![
+            1, 0, 0;
+            0, 2, 0;
+            0, 0, 3
+        ];
         assert_eq!(m.iter_row(0).sum::<i32>(), 1);
         assert_eq!(m.iter_row(1).sum::<i32>(), 2);
         assert_eq!(m.iter_row(2).sum::<i32>(), 3);
@@ -212,10 +212,11 @@ mod tests {
 
     #[test]
     fn col_iteration() {
-        let mut m = Matrix::<i32>::new(3, 3);
-        m[(0, 0)] = 1;
-        m[(1, 1)] = 2;
-        m[(2, 0)] = 3;
+        let m = matrix![
+            1, 0, 0;
+            0, 2, 0;
+            3, 0, 0
+        ];
         assert_eq!(m.iter_col(0).sum::<i32>(), 4);
         assert_eq!(m.iter_col(1).sum::<i32>(), 2);
         assert_eq!(m.iter_col(2).sum::<i32>(), 0);
@@ -225,10 +226,11 @@ mod tests {
 
     #[test]
     fn clone_buffer() {
-        let mut m = Matrix::<i32>::new(3, 3);
-        m[(0, 0)] = 1;
-        m[(1, 1)] = 2;
-        m[(2, 2)] = 3;
+        let m = matrix![
+            1, 0, 0;
+            0, 2, 0;
+            0, 0, 3
+        ];
         let vals = m.clone_buffer();
         assert_eq!(vals, &[1, 0, 0, 0, 2, 0, 0, 0, 3]);
     }
