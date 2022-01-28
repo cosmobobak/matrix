@@ -188,7 +188,7 @@ where
                 }
             }
             if i == self.rows - 1 {
-                write!(f, "]]")?;
+                writeln!(f, "]]")?;
             } else {
                 writeln!(f, "],")?;
             }
@@ -296,6 +296,7 @@ mod tests {
         ];
         assert_eq!(format!("{}", m), r#"[[1, 0, 0],
  [0, 2, 0],
- [0, 0, 3]]"#);
+ [0, 0, 3]]
+"#);
     }
 }
