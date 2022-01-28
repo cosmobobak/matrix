@@ -180,11 +180,11 @@ where
             } else {
                 write!(f, " [")?;
             }
-            for (j, col) in row.iter().enumerate() {
+            for (j, v) in row.iter().enumerate() {
                 if j == 0 {
-                    write!(f, "{}", col)?;
+                    write!(f, "{}", v)?;
                 } else {
-                    write!(f, ", {}", col)?;
+                    write!(f, ", {}", v)?;
                 }
             }
             if i == self.rows - 1 {
