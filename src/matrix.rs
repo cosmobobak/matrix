@@ -101,12 +101,10 @@ impl<T> Matrix<T> {
         self.data.chunks_mut(self.cols)
     }
 
-    /// # Panics
-    /// 
-    /// We haven't done this one yet. :)
-    #[allow(clippy::unused_self)]
-    pub fn iter_cols(&self) /* -> impl Iterator<Item = impl Iterator<Item = &T>> */ {
-        todo!();
+    pub fn iter_cols(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
+        (0..self.cols).map(
+            move |col| self.iter_col(col)
+        )
     }
 
     /// # Panics
