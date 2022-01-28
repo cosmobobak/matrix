@@ -20,6 +20,7 @@ impl<T> Matrix<T> {
         }
     }
 
+    #[must_use]
     pub fn from_default(rows: usize, cols: usize, default: T) -> Self
     where
         T: Clone,
@@ -28,6 +29,15 @@ impl<T> Matrix<T> {
             rows,
             cols,
             data: vec![default; rows * cols],
+        }
+    }
+
+    #[must_use]
+    pub fn from_parts(rows: usize, cols: usize, data: Vec<T>) -> Self {
+        Self {
+            rows,
+            cols,
+            data,
         }
     }
 
@@ -114,6 +124,11 @@ impl<T> Matrix<T> {
     {
         self.data.clone()
     }
+    
+    #[must_use]
+    pub fn data(&self) -> &[T] {
+        &self.data
+    }
 }
 
 impl<T> Index<(usize, usize)> for Matrix<T> {
@@ -130,9 +145,46 @@ impl<T> IndexMut<(usize, usize)> for Matrix<T> {
     }
 }
 
+#[macro_export]
+macro_rules! matrix {
+    () => {
+        {
+            // Handle the case when called with no arguments, i.e. matrix![]
+            use $crate::matrix::Matrix;
+            Matrix::new(0, 0)
+        }
+    };
+    ($( $( $x: expr ),*);*) => {
+        {
+            use $crate::matrix::Matrix;
+            let data_as_nested_array = [ $( [ $($x),* ] ),* ];
+            let rows = data_as_nested_array.len();
+            let cols = data_as_nested_array[0].len();
+            let data_as_flat_array: Vec<_> = data_as_nested_array.into_iter()
+                .flat_map(|row| row.into_iter())
+                .collect();
+            Matrix::from_parts(rows, cols, data_as_flat_array)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Matrix;
+
+    #[test]
+    fn macro_simple() {
+        let m = matrix![1, 2, 3; 4, 5, 6];
+        assert_eq!(m.rows(), 2);
+        assert_eq!(m.cols(), 3);
+        assert_eq!(m.get(0, 0), Some(&1));
+        assert_eq!(m.get(0, 1), Some(&2));
+        assert_eq!(m.get(0, 2), Some(&3));
+        assert_eq!(m.get(1, 0), Some(&4));
+        assert_eq!(m.get(1, 1), Some(&5));
+        assert_eq!(m.get(1, 2), Some(&6));
+        assert_eq!(m.get(2, 0), None);
+    }
 
     #[test]
     fn global_iteration() {
