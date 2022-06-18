@@ -34,8 +34,12 @@ impl<T> Matrix<T> {
         }
     }
 
+    /// # Panics
+    ///
+    /// You must provide a vector that has .len() == rows * cols.
     #[must_use]
     pub fn from_parts(rows: usize, cols: usize, data: Vec<T>) -> Self {
+        assert!(rows * cols == data.len());
         Self {
             rows,
             cols,
